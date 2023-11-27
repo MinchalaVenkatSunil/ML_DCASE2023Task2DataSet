@@ -1,0 +1,24 @@
+# Use a smaller base image
+FROM python:3.8-alpine
+
+WORKDIR /app
+
+# Copy only the necessary files
+COPY model_training_on_gcp.py .
+COPY requirements.txt .
+
+# Install build dependencies
+RUN apk --no-cache add build-base
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Remove build dependencies
+RUN apk del build-base
+
+# Clean up unnecessary files
+RUN rm -rf /var/cache/apk/*
+
+
+# Set the default command
+CMD ["python", "model_training_on_gcp.py"]

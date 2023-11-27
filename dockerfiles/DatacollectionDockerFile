@@ -1,0 +1,27 @@
+# Dockerfile.data_collection_simulation
+FROM python:3.8-slim
+
+# Create a volume named "mydata"
+VOLUME /data
+
+# Set the working directory inside the container
+WORKDIR /data
+
+COPY inputs/fan_attributes_00.csv .
+COPY inputs/bearing_attributes_00.csv .
+
+WORKDIR /app
+
+COPY requirements.txt .
+COPY mldocker-4713e7f8b358.json .
+
+RUN pip install --trusted-host pypi.python.org --no-cache-dir -r requirements.txt
+
+# Expose port 8080
+EXPOSE 8080
+
+WORKDIR /data
+
+COPY scripts/data_collection_simulation.py .
+
+ENTRYPOINT ["python", "data_collection_simulation.py"]

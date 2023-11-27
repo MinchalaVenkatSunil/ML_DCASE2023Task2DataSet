@@ -1,0 +1,49 @@
+# Stage 1: Download and store data
+FROM python:3.8-slim as download_and_store_stage
+
+# Create a volume named "mydata"
+VOLUME /data
+
+# Set the working directory inside the container
+WORKDIR /data
+
+COPY inputs/fan_attributes_00.csv .
+COPY inputs/bearing_attributes_00.csv .
+
+WORKDIR /app
+
+COPY requirements.txt .
+COPY mldocker-4713e7f8b358.json .
+
+RUN pip install --trusted-host pypi.python.org --no-cache-dir -r requirements.txt
+
+# Expose port 8080
+EXPOSE 8080
+
+WORKDIR /data
+
+COPY scripts/data_collection_simulation.py .
+
+# Run the Python script to download and store data in a local directory
+RUN python data_collection_simulation.py
+
+# Stage 2: Upload data to Google Cloud Storage
+FROM python:3.8-slim as upload_to_gcs_stage
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Install the necessary dependencies
+RUN pip install --no-cache-dir google-cloud-storage==1.43.0
+# RUN pip install --trusted-host pypi.python.org --no-cache-dir -r requirements.txt
+
+# Copy the Python script for uploading data to Google Cloud Storage
+COPY scripts/data_transfer_to_gcs.py .
+# COPY newtestproject-405920-4be1a3498a32.json .
+COPY mldocker-4713e7f8b358.json .
+
+# Copy data from the local directory in the first stage to the working directory
+COPY --from=download_and_store_stage /data /app/data
+
+# Run the Python script to upload data to Google Cloud Storage
+CMD ["python", "data_transfer_to_gcs.py"]
