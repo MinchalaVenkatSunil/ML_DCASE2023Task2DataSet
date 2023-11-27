@@ -6,7 +6,6 @@ on:
       - master
       - main
       - overall_requirement_basecode
-      - data_collection_updates
 
 jobs:
   build_and_push_docker:
