@@ -1,0 +1,36 @@
+name: Model Training on Google Cloud
+
+on:
+  push:
+    branches:
+      - feature
+
+jobs:
+  trigger_model_training:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Google Cloud SDK
+      uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      with:
+        service_account_key: ${{ secrets.GCLOUD_AUTH }}
+        project_id: your-project-id
+
+    - name: Install dependencies
+      run: |
+        gcloud components install beta
+        gcloud components install ai-platform
+
+    - name: Deploy to AI Platform
+      run: |
+        gcloud ai-platform models create "mi-model-training" --region "eu-central1"
+        gcloud ai-platform versions create "v1" --model "mi-model-training" --region "eu-central1" --origin "gcr.io/${{ secrets.GCP_PROJECT_ID }}/ModelTrainingDockerFile"
+
+    - name: Trigger Cloud Build for model training
+      run: |
+        gcloud builds submit \
+          --config=path/to/your/cloudbuild.yaml \
+          --substitutions=_MODEL_NAME=mi-model-training,_MODEL_TYPE=bearing
