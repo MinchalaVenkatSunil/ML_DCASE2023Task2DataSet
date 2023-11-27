@@ -9,10 +9,10 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - BranchFromMultistage
-      # - main_codebase
-      # - master
-      # - release
+      - main
+      - master
+      - overall_requirement_basecode
+      - data_collection_updates
 
 jobs:
   build:
@@ -20,7 +20,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v2
@@ -30,23 +30,56 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKENS }}
+        
       - name: Build and push Docker images
         run: |
           VERSION=1.0.1
           BUILD_NUMBER=$GITHUB_RUN_NUMBER
-          COMMIT_HASH=$(git rev-parse HEAD)
           VERSION_TAG="$VERSION-$BUILD_NUMBER"
-          #VERSION_TAG="$VERSION-$COMMIT_HASH"
 
-          if [ "$GITHUB_EVENT_NAME" == "push" ]; then
-            # Only build and push Docker image for pushes to the main branch
-            docker build -t ml-data-collection-service:${VERSION_TAG} --label "Simulates weekly sensor data collection and uploads to Google Cloud." -f dockerfiles/DatacollectionDockerFile .
+          # Only build and push Docker image for pushes to the main branch
+          docker build -t ml-data-collection-service:${VERSION_TAG} \
+            --label "Simulates weekly sensor data collection and uploads to Google Cloud." \
+            -f dockerfiles/DatacollectionDockerFile .
 
-            docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKENS }}
+          # docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKENS }}
 
-            docker tag ml-data-collection-service:${VERSION_TAG} ${{ secrets.DOCKER_USERNAME }}/ml-data-collection-service:${VERSION_TAG}
+          docker tag ml-data-collection-service:${VERSION_TAG} \
+            ${{ secrets.DOCKER_USERNAME }}/ml-data-collection-service:${VERSION_TAG}
 
-            docker push ${{ secrets.DOCKER_USERNAME }}/ml-data-collection-service:${VERSION_TAG}
-          else
-            echo "Skipping Docker image build for non-push events."
-          fi
+          docker push ${{ secrets.DOCKER_USERNAME }}/ml-data-collection-service:${VERSION_TAG}
+      
+  deploy:
+    runs-on: ubuntu-latest
+
+    needs: build
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKENS }}
+
+      - name: Run Docker container
+        run: |
+          VERSION=1.0.1
+          BUILD_NUMBER=$GITHUB_RUN_NUMBER
+          VERSION_TAG="$VERSION-$BUILD_NUMBER"
+
+          docker run -d -p 8080:8080 --name ml-data-collection \
+            ${{ secrets.DOCKER_USERNAME }}/ml-data-collection-service:${VERSION_TAG} || true          
