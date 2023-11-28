@@ -39,7 +39,8 @@ def transfer_weekly_data_to_gcs(local_data_path, gcs_bucket_name, gcs_destinatio
 
 if __name__ == "__main__":
     # TODO: Create environment or config for these data
-    local_data_path = "result/weekly/data_collection"
+    local_data_path = "/app/result/weekly/data_collection"
+    # /app/data/weekly/upload/
     # local_data_path = "C:/Users/harit/Documents/Visual Studio 2022/MLDockerTest/ML_DCASE2023Task2DataSet/result/weekly/data_collection"
     gcs_bucket_name = "dcase2023bucketdataset"
     gcs_destination_folder = "DcaseDevDataSetResult"

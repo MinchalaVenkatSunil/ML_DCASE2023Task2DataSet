@@ -1,5 +1,5 @@
 # Use a smaller base image
-FROM python:3.8-alpine
+FROM python:3.8-alpine as upload_to_gcs_stage
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -28,6 +28,9 @@ RUN echo "Removing build dependencies" \
 # Clean up unnecessary files
 RUN echo "Cleaning up unnecessary files" \
     && rm -rf /var/cache/apk/*
+
+# Copy data from the local directory in the first stage to the working directory
+COPY --from=download_and_store_stage /app/result /app/result
 
 # Set the default command
 CMD ["python", "scripts/data_transfer_to_gcs.py"]
