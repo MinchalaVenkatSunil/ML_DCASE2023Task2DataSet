@@ -4,11 +4,11 @@ FROM python:3.8-alpine
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy the necessary files
-# COPY scripts/ /app/scripts/
-# COPY dockerfiles/ /app/dockerfiles/
-# COPY requirements.txt .
-# COPY mldocker-4713e7f8b358.json .
+#Copy the necessary files
+COPY scripts/ /app/scripts/
+COPY dockerfiles/ /app/dockerfiles/
+COPY requirements.txt .
+COPY mldocker-4713e7f8b358.json .
 
 # Install build dependencies
 # RUN apk --no-cache add build-base
