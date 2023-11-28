@@ -50,8 +50,6 @@ jobs:
             --label "Simulates weekly sensor data collection and uploads to Google Cloud." \
             -f dockerfiles/DatacollectionDockerFile .
 
-          # docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKENS }}
-
           docker tag ml-data-collection-service:${VERSION_TAG} \
             ${{ secrets.DOCKER_USERNAME }}/ml-data-collection-service:${VERSION_TAG}
 

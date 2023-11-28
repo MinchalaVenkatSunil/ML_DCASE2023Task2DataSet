@@ -3,22 +3,25 @@ from google.cloud import storage
 import os
 import random
 from datetime import datetime, timedelta
+import json
 
 # TODO: Move the logging config from here
 logging.basicConfig(
     filename='data_collection_simulation.log', 
     level=logging.DEBUG, 
     format='%(asctime)s - %(levelname)s - %(message)s'
-    )
+)
 
 def download_file(
         bucket_name, 
         source_blob_name, 
         destination_file_name
-        ):
+    ):
     """Downloads a file from Google Cloud Storage."""
     try:
         json_key_path = "/app/mldocker-4713e7f8b358.json"
+        # json_key_path = "C:/Users/harit/Documents/Visual Studio 2022/MLDockerTest/ML_DCASE2023Task2DataSet/mldocker-4713e7f8b358.json"
+        
         storage_client = storage.Client.from_service_account_json(json_key_path)
         bucket = storage_client.bucket(bucket_name)
         blob = bucket.blob(source_blob_name)
@@ -31,6 +34,7 @@ def list_files(bucket_name, prefix):
     """Lists all files in a GCS bucket with the given prefix."""
     try:
         json_key_path = "/app/mldocker-4713e7f8b358.json"
+        # json_key_path = "C:/Users/harit/Documents/Visual Studio 2022/MLDockerTest/ML_DCASE2023Task2DataSet/mldocker-4713e7f8b358.json"
         storage_client = storage.Client.from_service_account_json(json_key_path)
         blobs = storage_client.list_blobs(bucket_name, prefix=prefix)
         file_names = [blob.name for blob in blobs]
@@ -44,7 +48,7 @@ def simulate_weekly_data_collection(
         bucket_name, 
         dataset_folder, 
         output_path
-        ):
+    ):
     logging.info("Starting weekly data collection simulation...")
 
     os.makedirs(output_path, exist_ok=True)
@@ -86,8 +90,28 @@ def simulate_weekly_data_collection(
                 source_blob_name = f"{section_prefix}/{file_name}"
                 destination_path = os.path.join(output_path, f'{machine_type}_{section}_{file_name}')
 
-                # print(f"Downloading file: {source_blob_name} -> {destination_path}")
+                # Download the file
                 download_file(bucket_name, source_blob_name, destination_path)
+
+                # Create and save metadata in JSON format
+                metadata = {
+                    'machine_type': machine_type,
+                    'section': section,
+                    'file_name': file_name,
+                    'timestamp': datetime.now().isoformat(),
+                    'domain': "source or target",
+                    'operating_speed': "1200 RPM",
+                    'machine_load': "75%",
+                    'viscosity': "10 cSt",
+                    'temperature': "40°C",
+                    'signal_to_noise_ratio': "15 dB",
+                    'attribute_machine_state': "normal",
+                    'attribute_machine_noise_type': "vibration",
+                }
+
+                metadata_path = os.path.join(output_path, f'{machine_type}_{section}_{file_name}.json')
+                with open(metadata_path, 'w') as json_file:
+                    json.dump(metadata, json_file)
 
     logging.info("Weekly data collection simulation completed.")
 
@@ -96,5 +120,6 @@ if __name__ == "__main__":
     gcs_bucket_name = "dcase2023bucketdataset"
     gcs_dataset_folder = "DcaseDevDataSet"
     output_path = "result/weekly/data_collection"
+    # output_path = "C:/Users/harit/Documents/Visual Studio 2022/MLDockerTest/ML_DCASE2023Task2DataSet/result/weekly/data_collection"
 
     simulate_weekly_data_collection(gcs_bucket_name, gcs_dataset_folder, output_path)
