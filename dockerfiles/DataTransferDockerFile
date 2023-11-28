@@ -1,23 +1,26 @@
 # Use a smaller base image
 FROM python:3.8-alpine
 
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy only the necessary files
-COPY data_transfer_to_gcs.py .
-COPY requirements.txt .
+# Copy the necessary files
+# COPY scripts/ /app/scripts/
+# COPY dockerfiles/ /app/dockerfiles/
+# COPY requirements.txt .
+# COPY mldocker-4713e7f8b358.json .
 
 # Install build dependencies
-RUN apk --no-cache add build-base
+# RUN apk --no-cache add build-base
 
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Install dependencies
+RUN pip install --trusted-host pypi.python.org --no-cache-dir -r requirements.txt
 
 # Remove build dependencies
-RUN apk del build-base
+# RUN apk del build-base
 
-# Clean up unnecessary files
-RUN rm -rf /var/cache/apk/*
+# # Clean up unnecessary files
+# RUN rm -rf /var/cache/apk/*
 
 # Set the default command
-CMD ["python", "data_transfer_to_gcs.py"]
+CMD ["python", "scripts/data_transfer_to_gcs.py"]
