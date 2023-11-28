@@ -1,0 +1,20 @@
+# Dockerfile.data_collection_simulation
+FROM python:3.8-slim
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Creating a volume named "mydata"
+VOLUME /app/result
+
+# Copy the necessary files
+COPY scripts/ /app/scripts/
+COPY dockerfiles/ /app/dockerfiles/
+COPY requirements.txt .
+COPY mldocker-key-gcp.json .
+
+# Install dependencies
+RUN pip install --trusted-host pypi.python.org --no-cache-dir -r requirements.txt
+
+# Set the entry point for the container
+ENTRYPOINT ["python", "scripts/data_collection_simulation.py"]

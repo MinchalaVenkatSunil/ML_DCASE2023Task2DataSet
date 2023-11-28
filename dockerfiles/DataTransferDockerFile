@@ -1,0 +1,37 @@
+# Use a smaller base image
+FROM python:3.8-alpine
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Use the same volume from the data collection container
+VOLUME /app/result
+
+# Echo statement for setting the working directory
+RUN echo "Setting the working directory to /app"
+
+# Copy the necessary files
+COPY scripts/ /app/scripts/
+COPY dockerfiles/ /app/dockerfiles/
+COPY requirements.txt .
+COPY mldocker-key-gcp.json .
+
+# Install build dependencies
+RUN echo "Installing build dependencies" \
+    && apk --no-cache add build-base
+
+# Install dependencies
+RUN echo "Installing Python dependencies" \
+    && pip install --no-cache-dir google-cloud-storage==1.43.0
+
+# Remove build dependencies
+RUN echo "Removing build dependencies" \
+    && apk del build-base
+
+# Clean up unnecessary files
+RUN echo "Cleaning up unnecessary files" \
+    && rm -rf /var/cache/apk/*
+
+# Set the default command
+CMD ["python", "scripts/data_transfer_to_gcs.py"]
+# CMD ["sh", "-c", "sleep 0m && python scripts/data_transfer_to_gcs.py"]
