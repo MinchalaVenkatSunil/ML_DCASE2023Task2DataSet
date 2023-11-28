@@ -1,8 +1,8 @@
 # TODO:
-# 2. Block docker image creation for non-related changes.
-# 3. Extend a base YAML template and override the parameters as necessary. Move the common tasks to the template.
-# 4. Trigger the deployment changes in the template dynamically based on branch and specific path changes
-# use serverless functions to trigger weekly schedule for data transfers
+# 1. Extend a base YAML template and override the parameters as necessary. Move the common tasks to the template.
+# 2. Trigger the deployment changes in the template dynamically based on branch and specific path changes.
+# 3. Use serverless functions to trigger a weekly schedule for data transfers.
+#    - In Azure, we use Azure functions along with logic apps. Explore equivalent options in GCP.
 
 name: CI/CD Pipeline
 
@@ -20,13 +20,12 @@ on:
       - master
       - overall_requirement_basecode
       - data_collection_transfer
-      
+
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -46,7 +45,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKENS }}
-        
+
       - name: Build and push Docker images
         run: |
           # TODO: Move to env variables
@@ -127,6 +126,3 @@ jobs:
           VERSION_TAG="$VERSION-$BUILD_NUMBER"
 
           docker run -v ml-data-collection-data:/app/result ${{ secrets.DOCKER_USERNAME }}/ml-data-transfer-service:${VERSION_TAG} || true
-
-            
-          

@@ -14,7 +14,7 @@ RUN echo "Setting the working directory to /app"
 COPY scripts/ /app/scripts/
 COPY dockerfiles/ /app/dockerfiles/
 COPY requirements.txt .
-COPY mldocker-4713e7f8b358.json .
+COPY mldocker-key-gcp.json .
 
 # Install build dependencies
 RUN echo "Installing build dependencies" \
