@@ -1,11 +1,11 @@
 # Dockerfile.data_collection_simulation
-FROM python:3.8-slim as download_and_store_stage
+FROM python:3.8-slim
 
 # Set the working directory inside the container
 WORKDIR /app
 
-# Create a volume named "mydata"
-VOLUME /app/data
+# Creating a volume named "mydata"
+VOLUME /app/result
 
 # Copy the necessary files
 COPY scripts/ /app/scripts/
