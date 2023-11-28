@@ -8,8 +8,8 @@ name: CI/CD Pipeline
 on:
   schedule:
     # - cron: '30 5 * * 1' # Monday
-    - cron: '35 10 * * *'
-    - cron: '37 10 * * *'
+    - cron: '50 10 * * *'
+    - cron: '55 10 * * *'
 
   push:
     branches:
@@ -97,7 +97,7 @@ jobs:
         run: echo "This step will be skipped at '37 10 * * *'"
   
       - name: Run Docker container
-        if: github.event.schedule == '35 10 * * *'
+        if: github.event.schedule == '50 10 * * *'
         run: |
           # TODO: Move to env variables
           VERSION=1.0.1
@@ -130,7 +130,7 @@ jobs:
         run: echo "This step will be skipped at '35 10 * * *'"
   
       - name: Run Docker container for data transfer
-        if: github.event.schedule == '37 10 * * *'
+        if: github.event.schedule == '55 10 * * *'
         run: |
           VERSION=1.0.1
           BUILD_NUMBER=$GITHUB_RUN_NUMBER
