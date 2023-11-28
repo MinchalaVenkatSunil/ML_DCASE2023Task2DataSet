@@ -3,10 +3,9 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - overall_requirement_basecode
-      - main_codebase
       - master
-      - release
+      - main
+      - overall_requirement_basecode
 
 jobs:
   build_and_push_docker:
