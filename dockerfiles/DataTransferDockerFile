@@ -14,7 +14,7 @@ WORKDIR /app
 # RUN apk --no-cache add build-base
 
 # Install dependencies
-RUN pip install --trusted-host pypi.python.org --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Remove build dependencies
 # RUN apk del build-base
