@@ -12,7 +12,7 @@ logging.basicConfig(
 def upload_to_gcs(bucket_name, local_path, destination_blob_name):
     """Uploads a file to Google Cloud Storage."""
     try:
-        json_key_path = "/app/mldocker-4713e7f8b358.json"
+        json_key_path = "/app/mldocker-key-gcp.json"
         storage_client = storage.Client.from_service_account_json(json_key_path)
         bucket = storage_client.bucket(bucket_name)
         blob = bucket.blob(destination_blob_name)

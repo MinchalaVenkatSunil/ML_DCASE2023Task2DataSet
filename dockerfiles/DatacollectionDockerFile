@@ -11,7 +11,7 @@ VOLUME /app/result
 COPY scripts/ /app/scripts/
 COPY dockerfiles/ /app/dockerfiles/
 COPY requirements.txt .
-COPY mldocker-4713e7f8b358.json .
+COPY mldocker-key-gcp.json .
 
 # Install dependencies
 RUN pip install --trusted-host pypi.python.org --no-cache-dir -r requirements.txt

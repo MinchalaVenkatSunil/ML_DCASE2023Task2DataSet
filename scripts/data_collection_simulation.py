@@ -19,8 +19,8 @@ def download_file(
     ):
     """Downloads a file from Google Cloud Storage."""
     try:
-        json_key_path = "/app/mldocker-4713e7f8b358.json"
-        # json_key_path = "C:/Users/harit/Documents/Visual Studio 2022/MLDockerTest/ML_DCASE2023Task2DataSet/mldocker-4713e7f8b358.json"
+        json_key_path = "/app/mldocker-key-gcp.json"
+        # json_key_path = "C:/Users/harit/Documents/Visual Studio 2022/MLDockerTest/ML_DCASE2023Task2DataSet/mldocker-key-gcp.json"
         
         storage_client = storage.Client.from_service_account_json(json_key_path)
         bucket = storage_client.bucket(bucket_name)
@@ -34,8 +34,8 @@ def download_file(
 def list_files(bucket_name, prefix):
     """Lists all files in a GCS bucket with the given prefix."""
     try:
-        json_key_path = "/app/mldocker-4713e7f8b358.json"
-        # json_key_path = "C:/Users/harit/Documents/Visual Studio 2022/MLDockerTest/ML_DCASE2023Task2DataSet/mldocker-4713e7f8b358.json"
+        json_key_path = "/app/mldocker-key-gcp.json"
+        # json_key_path = "C:/Users/harit/Documents/Visual Studio 2022/MLDockerTest/ML_DCASE2023Task2DataSet/mldocker-key-gcp.json"
         storage_client = storage.Client.from_service_account_json(json_key_path)
         blobs = storage_client.list_blobs(bucket_name, prefix=prefix)
         file_names = [blob.name for blob in blobs]
