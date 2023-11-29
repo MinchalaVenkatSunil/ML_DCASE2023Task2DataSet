@@ -41,7 +41,7 @@ These steps summarize the sample project's current focus on the Data Collection 
 ## Setup
 
 **Clone the repository:**
-- [git clone https://github.com/your-username/your-repository.git](https://github.com/MinchalaVenkatSunil/ML_DCASE2023Task2DataSet.git)
+- https://github.com/MinchalaVenkatSunil/ML_DCASE2023Task2DataSet.git
 
 **Set up your Python environment**
 - Provide your on-push branch trigger in the 'ci.cd.yml' pipeline
