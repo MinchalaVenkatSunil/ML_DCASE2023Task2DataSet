@@ -92,7 +92,7 @@ jobs:
           password: ${{ secrets.DOCKER_TOKENS }}
   
       - name: Run Docker container for data collection
-        if: github.event.schedule == '50 11 * * *'
+        # if: github.event.schedule == '50 11 * * *'
         run: |
           VERSION=1.0.1
           BUILD_NUMBER=$GITHUB_RUN_NUMBER
@@ -119,7 +119,7 @@ jobs:
           password: ${{ secrets.DOCKER_TOKENS }}
 
       - name: Run Docker container for data transfer
-        if: github.event.schedule == '50 11 * * *'
+        # if: github.event.schedule == '50 11 * * *'
         run: |
           VERSION=1.0.1
           BUILD_NUMBER=$GITHUB_RUN_NUMBER
