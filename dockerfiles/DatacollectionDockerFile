@@ -7,7 +7,7 @@ WORKDIR /app
 # Creating a volume named "mydata"
 VOLUME /app/result
 
-# Copy the necessary files
+# TODO: filter to copy only the necessary files
 COPY scripts/ /app/scripts/
 COPY dockerfiles/ /app/dockerfiles/
 COPY requirements.txt .

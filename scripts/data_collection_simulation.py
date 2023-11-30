@@ -26,7 +26,6 @@ def download_file(
         bucket = storage_client.bucket(bucket_name)
         blob = bucket.blob(source_blob_name)
         blob.download_to_filename(destination_file_name)
-        os.system("chmod +r /app/result/file_name")
         logging.info(f"Downloaded file: {source_blob_name} to {destination_file_name}")
     except Exception as e:
         logging.error(f"Error downloading file {source_blob_name}: {str(e)}")
@@ -121,7 +120,7 @@ if __name__ == "__main__":
     # TODO: Create environment or config for these data
     gcs_bucket_name = "dcase2023bucketdataset"
     gcs_dataset_folder = "DcaseDevDataSet"
-    output_path = "/app/result/weekly/data_collection"
+    output_path = "/app/result"
     # output_path = "C:/Users/harit/Documents/Visual Studio 2022/MLDockerTest/ML_DCASE2023Task2DataSet/result/weekly/data_collection"
 
     simulate_weekly_data_collection(gcs_bucket_name, gcs_dataset_folder, output_path)
