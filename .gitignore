@@ -1,3 +1,4 @@
 result/weekly/*
 data_collection_simulation.log
 data_transfer_to_gcs.log
+mldocker-key-gcp.json

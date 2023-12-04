@@ -48,6 +48,7 @@ These steps summarize the sample project's current focus on the Data Collection 
 
 **Google Cloud Authentication**
 - Obtain a service account key (JSON file) and save it as 'mldocker-key-gcp.json' in the project root
+- TODO: Need to implement authentication for production
 
 **Google cloud storage Bucket**
 - Create a bucket named 'dcase2023bucketdataset' and transfer the data set with a similar DCASEDataSet format like test, train, attributes_00.csv, etc. As we move on, we will collect the data from the source directly, and the next steps will continue. 
@@ -138,6 +139,10 @@ These steps summarize the sample project's current focus on the Data Collection 
 - Create an environment or config for data.
 - Move logging level config.
 - Improvise logic in certain areas.
-- Transition to serverless functions for automated weekly script triggers.
 - Address any outstanding issues with `docker/build-push-action`.
+- Remove service account and address auth as suggested in google docs
+- Option to read zip files asynchoneously
+- volume alternatives
+- encrypt using deafult or third party during transfers.
+- API management if needed
 - Additional improvements and optimizations as needed.
