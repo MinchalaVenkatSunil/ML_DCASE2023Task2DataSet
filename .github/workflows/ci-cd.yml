@@ -20,6 +20,7 @@ on:
       - master
       - overall_requirement_basecode
       - data_collection_transfer
+      - data_collection_transfer_updates
 
 jobs:
   build:
